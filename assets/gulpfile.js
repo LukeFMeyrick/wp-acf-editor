@@ -5,28 +5,28 @@ const gulp        = require('gulp');
 const browserSync = require('browser-sync').create();
 
 let debug = true;
-let proxy = 'flexible.dev';
+let proxy = 'wp-editor.dev';
 let staticSrc = 'src/**/*.{webm,svg,eot,ttf,woff,woff2,otf,mp4,json,pdf,ico}';
 
-/*  
+/*
  * Clean
  */
 gulp.task('clean', () => {
-	
+
 	return gulp.src('dist', {read: false})
 		.pipe($.clean());
 });
 
-/*  
+/*
  * Copy static files
  */
 gulp.task('copy', () => {
-	
+
 	return gulp.src(staticSrc)
 	.pipe(gulp.dest('dist/'))
 })
 
-/*  
+/*
  * SASS
  */
 gulp.task("sass", () => {
@@ -34,7 +34,7 @@ gulp.task("sass", () => {
 	let out = gulp.src('src/scss/base.scss')
 		.pipe( $.cssGlobbing({
 			extensions: ['.scss']
-		})); 
+		}));
 
 	// Create Sourmaps for develop
 	if (debug) {
@@ -73,12 +73,12 @@ gulp.task("sass", () => {
 
 });
 
-/*  
+/*
  * Javascript
  */
 gulp.task('js', () => {
-	
-	// Development 
+
+	// Development
 	if (debug) {
 		return gulp.src('src/js/site.js')
 			.pipe($.sourcemaps.init())
@@ -95,7 +95,7 @@ gulp.task('js', () => {
 			.pipe($.sourcemaps.write('./'))
 			.pipe(gulp.dest('dist/js'))
 	}
-	// Production 
+	// Production
 	else {
 		return gulp.src('src/js/site.js')
 			.pipe($.browserify({
@@ -114,26 +114,26 @@ gulp.task('js', () => {
 });
 
 
-/*  
+/*
  * Javascript watch
  */
 gulp.task('js-watch', ['js'], (done) => {
-	
+
 	browserSync.reload();
 	done();
 });
 
-/*  
+/*
  * Image optimisation
  */
 gulp.task('images', () => {
-  
+
 	return gulp.src(['./src/img/**/*.jpg', './src/img/**/*.png', './src/img/**/*.jpeg'])
 		.pipe($.image())
 		.pipe(gulp.dest('./dist/img/'));
 });
 
-/*  
+/*
  * Serve and watch for changes
  */
 gulp.task( "dev", ['copy', 'sass', 'js'], () => {
@@ -157,7 +157,7 @@ gulp.task( "dev", ['copy', 'sass', 'js'], () => {
 	]);
 });
 
-/*  
+/*
  * Set debug mode to false
  */
 gulp.task('production', () => {

@@ -1,10 +1,6 @@
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (function e(t, n, r) {
   function s(o, u) {
@@ -19,6 +15,125 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     s(r[o]);
   }return s;
 })({ 1: [function (require, module, exports) {
+    (function (process, global, Buffer, __argument0, __argument1, __argument2, __argument3, __filename, __dirname) {
+      var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+      ;(function (exports) {
+        'use strict';
+
+        var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array;
+
+        var PLUS = '+'.charCodeAt(0);
+        var SLASH = '/'.charCodeAt(0);
+        var NUMBER = '0'.charCodeAt(0);
+        var LOWER = 'a'.charCodeAt(0);
+        var UPPER = 'A'.charCodeAt(0);
+        var PLUS_URL_SAFE = '-'.charCodeAt(0);
+        var SLASH_URL_SAFE = '_'.charCodeAt(0);
+
+        function decode(elt) {
+          var code = elt.charCodeAt(0);
+          if (code === PLUS || code === PLUS_URL_SAFE) return 62; // '+'
+          if (code === SLASH || code === SLASH_URL_SAFE) return 63; // '/'
+          if (code < NUMBER) return -1; //no match
+          if (code < NUMBER + 10) return code - NUMBER + 26 + 26;
+          if (code < UPPER + 26) return code - UPPER;
+          if (code < LOWER + 26) return code - LOWER + 26;
+        }
+
+        function b64ToByteArray(b64) {
+          var i, j, l, tmp, placeHolders, arr;
+
+          if (b64.length % 4 > 0) {
+            throw new Error('Invalid string. Length must be a multiple of 4');
+          }
+
+          // the number of equal signs (place holders)
+          // if there are two placeholders, than the two characters before it
+          // represent one byte
+          // if there is only one, then the three characters before it represent 2 bytes
+          // this is just a cheap hack to not do indexOf twice
+          var len = b64.length;
+          placeHolders = '=' === b64.charAt(len - 2) ? 2 : '=' === b64.charAt(len - 1) ? 1 : 0;
+
+          // base64 is 4/3 + up to two characters of the original data
+          arr = new Arr(b64.length * 3 / 4 - placeHolders);
+
+          // if there are placeholders, only get up to the last complete 4 chars
+          l = placeHolders > 0 ? b64.length - 4 : b64.length;
+
+          var L = 0;
+
+          function push(v) {
+            arr[L++] = v;
+          }
+
+          for (i = 0, j = 0; i < l; i += 4, j += 3) {
+            tmp = decode(b64.charAt(i)) << 18 | decode(b64.charAt(i + 1)) << 12 | decode(b64.charAt(i + 2)) << 6 | decode(b64.charAt(i + 3));
+            push((tmp & 0xFF0000) >> 16);
+            push((tmp & 0xFF00) >> 8);
+            push(tmp & 0xFF);
+          }
+
+          if (placeHolders === 2) {
+            tmp = decode(b64.charAt(i)) << 2 | decode(b64.charAt(i + 1)) >> 4;
+            push(tmp & 0xFF);
+          } else if (placeHolders === 1) {
+            tmp = decode(b64.charAt(i)) << 10 | decode(b64.charAt(i + 1)) << 4 | decode(b64.charAt(i + 2)) >> 2;
+            push(tmp >> 8 & 0xFF);
+            push(tmp & 0xFF);
+          }
+
+          return arr;
+        }
+
+        function uint8ToBase64(uint8) {
+          var i,
+              extraBytes = uint8.length % 3,
+              // if we have 1 byte left, pad 2 bytes
+          output = "",
+              temp,
+              length;
+
+          function encode(num) {
+            return lookup.charAt(num);
+          }
+
+          function tripletToBase64(num) {
+            return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F);
+          }
+
+          // go through the array every three bytes, we'll deal with trailing stuff later
+          for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
+            temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + uint8[i + 2];
+            output += tripletToBase64(temp);
+          }
+
+          // pad the end with zeros, but make sure to not forget the extra bytes
+          switch (extraBytes) {
+            case 1:
+              temp = uint8[uint8.length - 1];
+              output += encode(temp >> 2);
+              output += encode(temp << 4 & 0x3F);
+              output += '==';
+              break;
+            case 2:
+              temp = (uint8[uint8.length - 2] << 8) + uint8[uint8.length - 1];
+              output += encode(temp >> 10);
+              output += encode(temp >> 4 & 0x3F);
+              output += encode(temp << 2 & 0x3F);
+              output += '=';
+              break;
+          }
+
+          return output;
+        }
+
+        exports.toByteArray = b64ToByteArray;
+        exports.fromByteArray = uint8ToBase64;
+      })(typeof exports === 'undefined' ? this.base64js = {} : exports);
+    }).call(this, require("rH1JPG"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/../../node_modules/base64-js/lib/b64.js", "/../../node_modules/base64-js/lib");
+  }, { "buffer": 2, "rH1JPG": 4 }], 2: [function (require, module, exports) {
     (function (process, global, Buffer, __argument0, __argument1, __argument2, __argument3, __filename, __dirname) {
       /*!
        * The buffer module from node.js, for the browser.
@@ -1063,127 +1178,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       function assert(test, message) {
         if (!test) throw new Error(message || 'Failed assertion');
       }
-    }).call(this, require("oMfpAn"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/index.js", "/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer");
-  }, { "base64-js": 2, "buffer": 1, "ieee754": 3, "oMfpAn": 4 }], 2: [function (require, module, exports) {
-    (function (process, global, Buffer, __argument0, __argument1, __argument2, __argument3, __filename, __dirname) {
-      var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-
-      ;(function (exports) {
-        'use strict';
-
-        var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array;
-
-        var PLUS = '+'.charCodeAt(0);
-        var SLASH = '/'.charCodeAt(0);
-        var NUMBER = '0'.charCodeAt(0);
-        var LOWER = 'a'.charCodeAt(0);
-        var UPPER = 'A'.charCodeAt(0);
-        var PLUS_URL_SAFE = '-'.charCodeAt(0);
-        var SLASH_URL_SAFE = '_'.charCodeAt(0);
-
-        function decode(elt) {
-          var code = elt.charCodeAt(0);
-          if (code === PLUS || code === PLUS_URL_SAFE) return 62; // '+'
-          if (code === SLASH || code === SLASH_URL_SAFE) return 63; // '/'
-          if (code < NUMBER) return -1; //no match
-          if (code < NUMBER + 10) return code - NUMBER + 26 + 26;
-          if (code < UPPER + 26) return code - UPPER;
-          if (code < LOWER + 26) return code - LOWER + 26;
-        }
-
-        function b64ToByteArray(b64) {
-          var i, j, l, tmp, placeHolders, arr;
-
-          if (b64.length % 4 > 0) {
-            throw new Error('Invalid string. Length must be a multiple of 4');
-          }
-
-          // the number of equal signs (place holders)
-          // if there are two placeholders, than the two characters before it
-          // represent one byte
-          // if there is only one, then the three characters before it represent 2 bytes
-          // this is just a cheap hack to not do indexOf twice
-          var len = b64.length;
-          placeHolders = '=' === b64.charAt(len - 2) ? 2 : '=' === b64.charAt(len - 1) ? 1 : 0;
-
-          // base64 is 4/3 + up to two characters of the original data
-          arr = new Arr(b64.length * 3 / 4 - placeHolders);
-
-          // if there are placeholders, only get up to the last complete 4 chars
-          l = placeHolders > 0 ? b64.length - 4 : b64.length;
-
-          var L = 0;
-
-          function push(v) {
-            arr[L++] = v;
-          }
-
-          for (i = 0, j = 0; i < l; i += 4, j += 3) {
-            tmp = decode(b64.charAt(i)) << 18 | decode(b64.charAt(i + 1)) << 12 | decode(b64.charAt(i + 2)) << 6 | decode(b64.charAt(i + 3));
-            push((tmp & 0xFF0000) >> 16);
-            push((tmp & 0xFF00) >> 8);
-            push(tmp & 0xFF);
-          }
-
-          if (placeHolders === 2) {
-            tmp = decode(b64.charAt(i)) << 2 | decode(b64.charAt(i + 1)) >> 4;
-            push(tmp & 0xFF);
-          } else if (placeHolders === 1) {
-            tmp = decode(b64.charAt(i)) << 10 | decode(b64.charAt(i + 1)) << 4 | decode(b64.charAt(i + 2)) >> 2;
-            push(tmp >> 8 & 0xFF);
-            push(tmp & 0xFF);
-          }
-
-          return arr;
-        }
-
-        function uint8ToBase64(uint8) {
-          var i,
-              extraBytes = uint8.length % 3,
-              // if we have 1 byte left, pad 2 bytes
-          output = "",
-              temp,
-              length;
-
-          function encode(num) {
-            return lookup.charAt(num);
-          }
-
-          function tripletToBase64(num) {
-            return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F);
-          }
-
-          // go through the array every three bytes, we'll deal with trailing stuff later
-          for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
-            temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + uint8[i + 2];
-            output += tripletToBase64(temp);
-          }
-
-          // pad the end with zeros, but make sure to not forget the extra bytes
-          switch (extraBytes) {
-            case 1:
-              temp = uint8[uint8.length - 1];
-              output += encode(temp >> 2);
-              output += encode(temp << 4 & 0x3F);
-              output += '==';
-              break;
-            case 2:
-              temp = (uint8[uint8.length - 2] << 8) + uint8[uint8.length - 1];
-              output += encode(temp >> 10);
-              output += encode(temp >> 4 & 0x3F);
-              output += encode(temp << 2 & 0x3F);
-              output += '=';
-              break;
-          }
-
-          return output;
-        }
-
-        exports.toByteArray = b64ToByteArray;
-        exports.fromByteArray = uint8ToBase64;
-      })(typeof exports === 'undefined' ? this.base64js = {} : exports);
-    }).call(this, require("oMfpAn"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js", "/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib");
-  }, { "buffer": 1, "oMfpAn": 4 }], 3: [function (require, module, exports) {
+    }).call(this, require("rH1JPG"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/../../node_modules/buffer/index.js", "/../../node_modules/buffer");
+  }, { "base64-js": 1, "buffer": 2, "ieee754": 3, "rH1JPG": 4 }], 3: [function (require, module, exports) {
     (function (process, global, Buffer, __argument0, __argument1, __argument2, __argument3, __filename, __dirname) {
       exports.read = function (buffer, offset, isLE, mLen, nBytes) {
         var e, m;
@@ -1269,8 +1265,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         buffer[offset + i - d] |= s * 128;
       };
-    }).call(this, require("oMfpAn"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js", "/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754");
-  }, { "buffer": 1, "oMfpAn": 4 }], 4: [function (require, module, exports) {
+    }).call(this, require("rH1JPG"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/../../node_modules/ieee754/index.js", "/../../node_modules/ieee754");
+  }, { "buffer": 2, "rH1JPG": 4 }], 4: [function (require, module, exports) {
     (function (process, global, Buffer, __argument0, __argument1, __argument2, __argument3, __filename, __dirname) {
       // shim for using process in browser
 
@@ -1336,21 +1332,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       process.chdir = function (dir) {
         throw new Error('process.chdir is not supported');
       };
-    }).call(this, require("oMfpAn"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process/browser.js", "/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process");
-  }, { "buffer": 1, "oMfpAn": 4 }], 5: [function (require, module, exports) {
+    }).call(this, require("rH1JPG"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/../../node_modules/process/browser.js", "/../../node_modules/process");
+  }, { "buffer": 2, "rH1JPG": 4 }], 5: [function (require, module, exports) {
     (function (process, global, Buffer, __argument0, __argument1, __argument2, __argument3, __filename, __dirname) {
-      // var Editor = require('./modules/editor');
-      // var Panel = require('./modules/panel');
 
       var Controller = require('./modules/controller');
 
       jQuery(document).ready(function ($) {
 
-        // Editor.init()
         Controller.init();
       });
-    }).call(this, require("oMfpAn"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/fake_346f49ed.js", "/");
-  }, { "./modules/controller": 6, "buffer": 1, "oMfpAn": 4 }], 6: [function (require, module, exports) {
+    }).call(this, require("rH1JPG"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/fake_c99b7875.js", "/");
+  }, { "./modules/controller": 6, "buffer": 2, "rH1JPG": 4 }], 6: [function (require, module, exports) {
     (function (process, global, Buffer, __argument0, __argument1, __argument2, __argument3, __filename, __dirname) {
       // ------------------------------------
       //
@@ -1359,166 +1352,179 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       // ------------------------------------
 
 
-      var Screen = require('./screen');
-
       (function ($) {
 
         if (typeof window.Controller == 'undefined') window.Controller = {};
 
         Controller = {
 
-          panel: null,
-          screen: null,
-          data: {},
+          editors: [],
 
           init: function init() {
 
-            // Get Elements
-            this.panel = $('.acfeditor');
-            this.screenContainer = this.panel.find('[data-screen]');
-            this.btnSave = this.panel.find('[data-save]');
+            // Create Editor
+            this.createEditor();
 
-            // Setup Events
-            $('[data-editable]').on('click', Controller.handleEditableClick);
-            this.btnSave.on('click', Controller.save);
+            // Media Uploaded
+            this.mediaUpload();
+
+            // Remove Format for Paste
+            // this.removeFormat();
           },
 
-          handleEditableClick: function handleEditableClick(e) {
+          createEditor: function createEditor() {
 
-            var $el = $(this);
+            $('[data-editable]').each(function (i) {
 
-            // Collect Data
-            var obj = {
-              key: $el.data('editable'),
-              type: $el.data('editableType'),
-              title: $el.data('editableTitle'),
-              description: $el.data('editableDescription'),
-              element: $el
-            };
+              var $this = $(this);
 
-            // Show
-            Controller.show(obj);
+              // Wrap Editable Divs
+              $this.attr('tabindex', '0').wrapInner("<div data-editor></div>");
+
+              // Set Text Align of Editor
+              var alignment = $this.css('text-align');
+              $this.attr('data-align', alignment);
+
+              // Import Icons
+              var icons = Quill.import('ui/icons');
+              icons['bold'] = '<i class="icon -bold" aria-hidden="true">B</i>';
+              icons['italic'] = '<i class="icon -italic" aria-hidden="true">I</i>';
+              icons['underline'] = '<i class="icon -underline" aria-hidden="true">U</i>';
+              icons['strike'] = '<i class="icon -strike" aria-hidden="true">S</i>';
+              // icons['image'] = '<i class="icon -image" aria-hidden="true"></i>';
+
+              var type = $this.data('editable');
+              var placeholder = $this.data('placeholder');
+
+              // Controller.editorDom(type);
+
+              Controller.editorType(type, placeholder);
+
+              // Controller.removeFormat($this);
+              //
+              // $this.on('paste', function (evt) {
+              //     var clipboarddata =  window.event.clipboardData.getData('text/plain');
+              //     console.log("paste value" + clipboarddata);
+              // });
+
+              // Controller.editors.push(editor);
+            });
           },
-          save: function save(e) {
+          editorType: function editorType(type, placeholder) {
 
-            // Set Value
-            Controller.set(Controller.screen.props.key, Controller.$screen.find('[name="input"]').val());
+            if (!placeholder) {
+              var _placeholder = "Click to edit...";
+            }
 
-            // Update DOM
-            Controller.screen.props.element.html(Controller.$screen.find('[name="input"]').val());
+            switch (type) {
 
-            // Close Panel
-            Controller.hide();
+              case 'wysiwyg':
+                return Controller.buildWysiwyg(type, placeholder);
+                return Controller.uploadButton();
+                break;
+
+              case 'text':
+                return Controller.buildText(type, placeholder);
+                break;
+
+              case 'textarea':
+                return Controller.buildTextarea(type, placeholder);
+                break;
+
+              default:
+                break;
+
+            }
           },
-          show: function show(props) {
+          buildWysiwyg: function buildWysiwyg(type, placeholder) {
 
-            // Set The Screen
-            this.screen = new Screen(props);
-            this.screenContainer.html('');
-            this.$screen = $(this.screen.render());
-            this.$screen.appendTo(this.screenContainer);
-            // this.screenContainer.append(this.screen.render());
+            var q = new Quill('[data-editable="' + type + '"] > [data-editor]', {
+              modules: {
+                toolbar: [[{
+                  header: [1, 2, false]
+                }], ['bold', 'italic', 'underline', 'strike'], ['blockquote', 'list']]
+              },
+              placeholder: placeholder,
+              theme: 'snow',
+              scrollingContainer: '[data-editable="' + type + '"]'
+            });
 
-            // Show
-            this.panel.addClass('-active');
+            Controller.uploadButton($('[data-editable="wysiwyg"]'));
+
+            return q;
           },
-          hide: function hide() {
+          uploadButton: function uploadButton($addMedia) {
+            console.log('asf');
 
-            this.panel.removeClass('-active');
+            $addMedia.each(function (i) {
+              $(this).addClass('BOOM').find('.ql-toolbar').append('<span class="ql-formats"><button type="button" class="ql-media"><i class="icon -upload"></i></button></span>');
+            });
           },
-          set: function set(key, value) {
+          buildTextarea: function buildTextarea(type, placeholder) {
 
-            this.data[key] = value;
+            return new Quill('[data-editable="' + type + '"] > [data-editor]', {
+              modules: {
+                toolbar: [['bold', 'italic']]
+              },
+              placeholder: placeholder,
+              theme: 'bubble'
+            });
           },
-          get: function get(key) {
+          buildText: function buildText(type, placeholder) {
+            $('[data-editable="' + type + '"]').attr('contentEditable', true);
+            // Controller.preventFormat()
+            Controller.clearFormat($('[contentEditable]'));
+          },
+          clearFormat: function clearFormat(content) {
 
-            return this.data[key];
+            content.on('blur', function () {
+              console.log('asfasf');
+              var $text = $(this).text();
+
+              $(this).html($text);
+            });
+          },
+
+
+          // -------------------------------
+          // Add Media Upload Functionality
+          // -------------------------------
+
+          mediaUpload: function mediaUpload() {
+            var file_frame; // variable for the wp.media file_frame
+
+            // attach a click event (or whatever you want) to some element on your page
+            $('.ql-media').on('click', function (event) {
+              var $button = $(this);
+
+              // if the file_frame has already been created, just reuse it
+              if (file_frame) {
+                file_frame.open();
+                return;
+              }
+
+              file_frame = wp.media.frames.file_frame = wp.media({
+                title: $(this).data('uploader_title'),
+                button: {
+                  text: $(this).data('uploader_button_text')
+                },
+                multiple: false // set this to true for multiple file selection
+              });
+
+              file_frame.on('select', function () {
+                var attachment = file_frame.state().get('selection').first().toJSON();
+
+                // do something with the file here
+                $button.closest('.ql-toolbar').next('.ql-container').find('.ql-editor').addClass('boom').append('<img src="' + attachment.url + '"/>');
+              });
+
+              file_frame.open();
+            });
           }
         };
 
         module.exports = Controller;
       })(jQuery);
-    }).call(this, require("oMfpAn"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/modules/controller.js", "/modules");
-  }, { "./screen": 7, "buffer": 1, "oMfpAn": 4 }], 7: [function (require, module, exports) {
-    (function (process, global, Buffer, __argument0, __argument1, __argument2, __argument3, __filename, __dirname) {
-      // ------------------------------------
-      //
-      // Screen
-      //
-      // ------------------------------------
-
-      var Screen = function () {
-
-        // ------------------------------------
-        // Constructor
-        // ------------------------------------
-
-        function Screen(obj) {
-          _classCallCheck(this, Screen);
-
-          // Get Props
-          this.props = obj;
-
-          // Get The Value
-          this.value = this.props.element.text();
-
-          // Events
-          // this.props.element.on('keyup',this.bind);
-
-        }
-
-        _createClass(Screen, [{
-          key: "bind",
-          value: function bind(e) {
-
-            console.log("HELLO");
-          }
-
-          // ------------------------------------
-          // Types
-          // ------------------------------------
-
-        }, {
-          key: "renderType",
-          value: function renderType() {
-
-            switch (this.props.type) {
-
-              case 'text':
-                return "<input name=\"input\" value=\"" + this.value + "\">";
-                break;
-
-              case 'textarea':
-                return "<textarea name=\"input\">" + this.value + "</textarea>";
-                break;
-
-              default:
-                return '';
-
-            }
-          }
-
-          // ------------------------------------
-          // Render Card
-          // ------------------------------------
-
-        }, {
-          key: "render",
-          value: function render() {
-
-            var header = this.props.title ? "<h6 class=\"editor-screen-title\">" + this.props.title + "</h6>" : '';
-            var description = this.props.description ? "<div class=\"editor-screen-description\">" + this.props.description + "</div>" : '';
-            var input = this.renderType();
-            return '<div class="screen">' + header + description + input + '</div>';
-          }
-        }]);
-
-        return Screen;
-      }();
-
-      ;
-
-      module.exports = Screen;
-    }).call(this, require("oMfpAn"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/modules/screen.js", "/modules");
-  }, { "buffer": 1, "oMfpAn": 4 }] }, {}, [5]);
+    }).call(this, require("rH1JPG"), typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer, arguments[3], arguments[4], arguments[5], arguments[6], "/modules/controller.js", "/modules");
+  }, { "buffer": 2, "rH1JPG": 4 }] }, {}, [5]);
 //# sourceMappingURL=site.js.map

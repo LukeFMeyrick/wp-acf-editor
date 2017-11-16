@@ -12,6 +12,9 @@ $paragraphFont: 'Helvetica', sans-serif;
 // Colours
 // -------------------
 
+$editColor: blue;
+$editLine: darken(white,8);
+
 $primaryColor: #69b5e1;
 $secondaryColor: #9d6ab4;
 
@@ -27,6 +30,13 @@ $errorColor: #AA0000;
 $successColor: #00AA00;
 $baseFontSize: 16;
 
+
+// Transitions + Animations
+// -------------------
+
+$ease: cubic-bezier(.24,.36,.3,1);
+
+
 // Breakpoints
 // -------------------
 
@@ -36,7 +46,7 @@ $breakpoints: (
 	'desktop': (min-width: 1200px),
 );
 
-// Include gutter on outside 
+// Include gutter on outside
 $gutterOnOutside: true;
 
 // Breakpoints Grid Settings

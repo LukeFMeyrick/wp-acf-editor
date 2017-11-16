@@ -1,0 +1,228 @@
+// ----------------
+// Dropdown Select
+// ----------------
+
+.ql-toolbar:not(afsaf) .ql-picker {
+    height: auto;
+    position: relative;
+    cursor: pointer;
+
+    &:first-of-type {
+        border-right: 1px solid $editLine;
+        margin-right: -1px;
+    }
+
+    &.ql-header .ql-picker-label {
+        font-size: 1em !important;
+        transition: .3s $ease;
+        will-change: background;
+        background: transparent;
+
+        &:before {
+            color: rgba(black,.8);
+            transition: .4s $ease;
+            will-change: color;
+            display: inline-block;
+        }
+
+        &[class*="active"]:before {
+            color: $editColor;
+        }
+    }
+
+    &[class*="expanded"],
+    &:hover,
+    &:focus {
+
+        &.ql-header .ql-picker-label {
+            background: rgba($editColor,.05);
+
+            &:before {
+                color: $editColor;
+            }
+
+            svg {
+                opacity: 1;
+            }
+        }
+    }
+
+    &.ql-header .ql-picker-label:not([data-value]):before,
+    .ql-picker-item:not([data-value]):before {
+        content: 'Normal';
+    }
+
+    &:not(.ql-color-picker):not(.ql-icon-picker) svg {
+        position: absolute;
+        right: .2em;
+        top: calc(50% - .7em);
+        width: 1.5em;
+        opacity: .3;
+        transition: .4s $ease;
+        will-change: opacity;
+    }
+
+    .ql-picker-label {
+        border: none;
+        display: block;
+        position: relative;
+        min-width: 8em;
+        padding: 1rem 1.6rem 1rem 1rem;
+
+        // Labels for Dropdowns
+        &[data-value]:not([data-value="1"]):not([data-value="2"]):not([data-value="2"]):not([data-value="3"]):not([data-value="4"]):not([data-value="5"]):not([data-value="6"]):before,~.ql-picker-options .ql-picker-item[data-value]:not([data-value="1"]):not([data-value="2"]):not([data-value="2"]):not([data-value="3"]):not([data-value="4"]):not([data-value="5"]):not([data-value="6"]):before {
+            content: attr(data-value);
+        }
+
+        &[data-value="1"]:before,
+        &[data-value="2"]:before,
+        &[data-value="3"]:before,
+        &[data-value="4"]:before,
+        &[data-value="5"]:before,
+        &[data-value="6"]:before ,
+        ~.ql-picker-options .ql-picker-item[data-value="1"]:before,
+        ~.ql-picker-options .ql-picker-item[data-value="2"]:before,
+        ~.ql-picker-options .ql-picker-item[data-value="3"]:before,
+        ~.ql-picker-options .ql-picker-item[data-value="4"]:before,
+        ~.ql-picker-options .ql-picker-item[data-value="5"]:before,
+        ~.ql-picker-options .ql-picker-item[data-value="6"]:before {
+            content: "Heading " attr(data-value);
+        }
+
+        &[data-value="1"],
+        ~.ql-picker-options .ql-picker-item[data-value="1"] {
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        &[data-value="2"],
+        ~.ql-picker-options .ql-picker-item[data-value="2"] {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        &[data-value="3"],
+        ~.ql-picker-options .ql-picker-item[data-value="3"] {
+            font-size: 1.23em;
+            font-weight: 600;
+        }
+
+        &[data-value="4"],
+        ~.ql-picker-options .ql-picker-item[data-value="4"] {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        &[data-value="5"],
+        ~.ql-picker-options .ql-picker-item[data-value="5"] {
+            font-size: 1em;
+            font-weight: 400;
+        }
+
+        &[data-value="6"],
+        ~.ql-picker-options .ql-picker-item[data-value="6"] {
+            font-size: .9em;
+            font-weight: 400;
+        }
+    }
+}
+
+.ql-toolbar:not(afsaf) .ql-picker-options {
+    background: white;
+    display: block;
+    position: absolute;
+    border: none;
+    min-width: 200px;
+    left: 200vw;
+    top: 100%;
+    padding: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: .3s $ease, left 0s .3s;
+    border-radius: 0;
+    // transform: translate(0,-.5em);
+    // transform: translate3d(0,-.5em,0);
+    box-shadow: inset 0 -.15em 0 $editColor,
+    0 .2em 1em .1em $editLine;
+
+    .ql-picker-item {
+        display: block;
+        opacity: 0;
+        transition: .3s;
+        transform: translate(0,-.5em);
+        transform: translate3d(0,-.5em,0);
+        padding: 1rem;
+        transition: .2s $ease;
+        will-change: background;
+        cursor: pointer;
+
+        &:before {
+            display: inline-block;
+            transition: .2s $ease;
+            will-change: transform;
+        }
+
+        &:not(:last-of-type) {
+
+            &:after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 1rem;
+                right: 1rem;
+                top: 0;
+                bottom: 0;
+                z-index: 0;
+                box-shadow:
+                inset 0 -1px 0 lighten(black,90),
+                0 -1px 0 lighten(black,90);
+                transition: .2s $ease;
+                will-change: box-shadow;
+            }
+        }
+
+        &:hover {
+            z-index: 1;
+
+            &:before {
+                // transform: translate(.08em,0);
+                color: $editColor;
+                // transform: translate3d(.08em,0,0);
+            }
+
+            // &:after {
+            //     box-shadow:
+            //     inset 0 -1px 0 rgba($editColor,.8);
+            // }
+        }
+    }
+}
+
+// Dropdown Expanded
+//------------------
+.ql-toolbar:not(afsaf) .ql-expanded {
+    border: none;
+
+    .ql-picker-options {
+        left: 0;
+        border: none;
+        opacity: 1;
+        transform: translate(0,0);
+        transform: translate3d(0,0,0);
+        will-change: left, transform, opacity;
+        transition: .3s $ease, left 0s;
+
+        > span {
+            opacity: 1;
+            transform: translate(0,0);
+            transform: translate3d(0,0,0);
+
+            @for $i from 1 to 10 {
+
+                &:nth-of-type(#{$i}) {
+                    transition: .3s $ease $i*.05s;
+                }
+            }
+        }
+    }
+}

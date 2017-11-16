@@ -1,0 +1,15 @@
+//
+// Plain Text
+// --------------------------------------------------
+
+body [data-editable="text"]:not(that) {
+
+    > *:not(that),
+    > *:not(that) > *:not(that),
+    *:not(that) {
+        display: inline-block;
+        font-size: inherit;
+        font-weight: inherit;
+        font-style: inherit;
+    }
+}

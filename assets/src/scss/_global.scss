@@ -1,0 +1,19 @@
+//
+// Global Styles
+// --------------------------------------------------
+
+[contentEditable] {
+	outline: none;
+}
+
+[data-editable="textarea"],
+[data-editable="text"] {
+
+	&[data-align="center"] .ql-editor {
+		text-align: center;
+	}
+
+	&[data-align="right"] .ql-editor {
+		text-align: center;
+	}
+}

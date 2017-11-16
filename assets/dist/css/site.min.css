@@ -1,3 +1,37 @@
+[contentEditable] {
+  outline: none; }
+
+[data-editable="textarea"][data-align="center"] .ql-editor,
+[data-editable="text"][data-align="center"] .ql-editor {
+  text-align: center; }
+
+[data-editable="textarea"][data-align="right"] .ql-editor,
+[data-editable="text"][data-align="right"] .ql-editor {
+  text-align: center; }
+
+body [data-editable="text"]:not(that) > *:not(that),
+body [data-editable="text"]:not(that) > *:not(that) > *:not(that),
+body [data-editable="text"]:not(that) *:not(that) {
+  display: inline-block;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit; }
+
+[data-editable="wysiwyg"] {
+  position: relative;
+  outline: none; }
+  [data-editable="wysiwyg"]:focus .ql-toolbar, [data-editable="wysiwyg"]:hover .ql-toolbar {
+    opacity: 1;
+    background: white; }
+  [data-editable="wysiwyg"] .ql-toolbar {
+    opacity: 0;
+    transition: 0.4s cubic-bezier(0.24, 0.36, 0.3, 1);
+    position: absolute;
+    bottom: 100%;
+    left: 1vw;
+    width: calc(100% - 2vw);
+    z-index: 1; }
+
 button,
 .button,
 [class^="button"],
@@ -150,22 +184,6 @@ input.button-twitter {
     color: white;
     cursor: default; }
 
-.acfeditor {
-  background-color: blue;
-  padding: 2em;
-  height: 100vh;
-  width: 30vw;
-  position: fixed;
-  top: 0;
-  left: 0;
-  -ms-transform: translateX(-30vw);
-  transform: translateX(-30vw);
-  transition: 200ms all;
-  color: white; }
-  .acfeditor.-active {
-    -ms-transform: translateX(0vw);
-    transform: translateX(0vw); }
-
 form {
   display: block; }
 
@@ -285,6 +303,283 @@ ul.menu-secondary li {
   display: block; }
   ul.menu-secondary li a {
     display: block; }
+
+.ql-toolbar:not(afsaf) .ql-picker {
+  height: auto;
+  position: relative;
+  cursor: pointer; }
+  .ql-toolbar:not(afsaf) .ql-picker:first-of-type {
+    border-right: 1px solid #ebebeb;
+    margin-right: -1px; }
+  .ql-toolbar:not(afsaf) .ql-picker.ql-header .ql-picker-label {
+    font-size: 1em !important;
+    transition: 0.3s cubic-bezier(0.24, 0.36, 0.3, 1);
+    will-change: background;
+    background: transparent; }
+    .ql-toolbar:not(afsaf) .ql-picker.ql-header .ql-picker-label:before {
+      color: rgba(0, 0, 0, 0.8);
+      transition: 0.4s cubic-bezier(0.24, 0.36, 0.3, 1);
+      will-change: color;
+      display: inline-block; }
+    .ql-toolbar:not(afsaf) .ql-picker.ql-header .ql-picker-label[class*="active"]:before {
+      color: blue; }
+  .ql-toolbar:not(afsaf) .ql-picker[class*="expanded"].ql-header .ql-picker-label, .ql-toolbar:not(afsaf) .ql-picker:hover.ql-header .ql-picker-label, .ql-toolbar:not(afsaf) .ql-picker:focus.ql-header .ql-picker-label {
+    background: rgba(0, 0, 255, 0.05); }
+    .ql-toolbar:not(afsaf) .ql-picker[class*="expanded"].ql-header .ql-picker-label:before, .ql-toolbar:not(afsaf) .ql-picker:hover.ql-header .ql-picker-label:before, .ql-toolbar:not(afsaf) .ql-picker:focus.ql-header .ql-picker-label:before {
+      color: blue; }
+    .ql-toolbar:not(afsaf) .ql-picker[class*="expanded"].ql-header .ql-picker-label svg, .ql-toolbar:not(afsaf) .ql-picker:hover.ql-header .ql-picker-label svg, .ql-toolbar:not(afsaf) .ql-picker:focus.ql-header .ql-picker-label svg {
+      opacity: 1; }
+  .ql-toolbar:not(afsaf) .ql-picker.ql-header .ql-picker-label:not([data-value]):before,
+  .ql-toolbar:not(afsaf) .ql-picker .ql-picker-item:not([data-value]):before {
+    content: 'Normal'; }
+  .ql-toolbar:not(afsaf) .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg {
+    position: absolute;
+    right: .2em;
+    top: calc(50% - .7em);
+    width: 1.5em;
+    opacity: .3;
+    transition: 0.4s cubic-bezier(0.24, 0.36, 0.3, 1);
+    will-change: opacity; }
+  .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label {
+    border: none;
+    display: block;
+    position: relative;
+    min-width: 8em;
+    padding: 1rem 1.6rem 1rem 1rem; }
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value]:not([data-value="1"]):not([data-value="2"]):not([data-value="2"]):not([data-value="3"]):not([data-value="4"]):not([data-value="5"]):not([data-value="6"]):before, .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value]:not([data-value="1"]):not([data-value="2"]):not([data-value="2"]):not([data-value="3"]):not([data-value="4"]):not([data-value="5"]):not([data-value="6"]):before {
+      content: attr(data-value); }
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value="1"]:before, .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value="2"]:before, .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value="3"]:before, .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value="4"]:before, .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value="5"]:before, .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value="6"]:before,
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value="1"]:before,
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value="2"]:before,
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value="3"]:before,
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value="4"]:before,
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value="5"]:before,
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value="6"]:before {
+      content: "Heading " attr(data-value); }
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value="1"],
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value="1"] {
+      font-size: 1.5em;
+      font-weight: 600; }
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value="2"],
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value="2"] {
+      font-size: 1.3em;
+      font-weight: 600; }
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value="3"],
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value="3"] {
+      font-size: 1.23em;
+      font-weight: 600; }
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value="4"],
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value="4"] {
+      font-size: 1.1em;
+      font-weight: 600; }
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value="5"],
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value="5"] {
+      font-size: 1em;
+      font-weight: 400; }
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label[data-value="6"],
+    .ql-toolbar:not(afsaf) .ql-picker .ql-picker-label ~ .ql-picker-options .ql-picker-item[data-value="6"] {
+      font-size: .9em;
+      font-weight: 400; }
+
+.ql-toolbar:not(afsaf) .ql-picker-options {
+  background: white;
+  display: block;
+  position: absolute;
+  border: none;
+  min-width: 200px;
+  left: 200vw;
+  top: 100%;
+  padding: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: 0.3s cubic-bezier(0.24, 0.36, 0.3, 1), left 0s 0.3s;
+  border-radius: 0;
+  box-shadow: inset 0 -0.15em 0 blue, 0 0.2em 1em 0.1em #ebebeb; }
+  .ql-toolbar:not(afsaf) .ql-picker-options .ql-picker-item {
+    display: block;
+    opacity: 0;
+    transition: .3s;
+    -ms-transform: translate(0, -0.5em);
+    transform: translate(0, -0.5em);
+    transform: translate3d(0, -0.5em, 0);
+    padding: 1rem;
+    transition: 0.2s cubic-bezier(0.24, 0.36, 0.3, 1);
+    will-change: background;
+    cursor: pointer; }
+    .ql-toolbar:not(afsaf) .ql-picker-options .ql-picker-item:before {
+      display: inline-block;
+      transition: 0.2s cubic-bezier(0.24, 0.36, 0.3, 1);
+      will-change: transform; }
+    .ql-toolbar:not(afsaf) .ql-picker-options .ql-picker-item:not(:last-of-type):after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 1rem;
+      right: 1rem;
+      top: 0;
+      bottom: 0;
+      z-index: 0;
+      box-shadow: inset 0 -1px 0 #e6e6e6, 0 -1px 0 #e6e6e6;
+      transition: 0.2s cubic-bezier(0.24, 0.36, 0.3, 1);
+      will-change: box-shadow; }
+    .ql-toolbar:not(afsaf) .ql-picker-options .ql-picker-item:hover {
+      z-index: 1; }
+      .ql-toolbar:not(afsaf) .ql-picker-options .ql-picker-item:hover:before {
+        color: blue; }
+
+.ql-toolbar:not(afsaf) .ql-expanded {
+  border: none; }
+  .ql-toolbar:not(afsaf) .ql-expanded .ql-picker-options {
+    left: 0;
+    border: none;
+    opacity: 1;
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+    transform: translate3d(0, 0, 0);
+    will-change: left, transform, opacity;
+    transition: 0.3s cubic-bezier(0.24, 0.36, 0.3, 1), left 0s; }
+    .ql-toolbar:not(afsaf) .ql-expanded .ql-picker-options > span {
+      opacity: 1;
+      -ms-transform: translate(0, 0);
+      transform: translate(0, 0);
+      transform: translate3d(0, 0, 0); }
+      .ql-toolbar:not(afsaf) .ql-expanded .ql-picker-options > span:nth-of-type(1) {
+        transition: 0.3s cubic-bezier(0.24, 0.36, 0.3, 1) 0.05s; }
+      .ql-toolbar:not(afsaf) .ql-expanded .ql-picker-options > span:nth-of-type(2) {
+        transition: 0.3s cubic-bezier(0.24, 0.36, 0.3, 1) 0.1s; }
+      .ql-toolbar:not(afsaf) .ql-expanded .ql-picker-options > span:nth-of-type(3) {
+        transition: 0.3s cubic-bezier(0.24, 0.36, 0.3, 1) 0.15s; }
+      .ql-toolbar:not(afsaf) .ql-expanded .ql-picker-options > span:nth-of-type(4) {
+        transition: 0.3s cubic-bezier(0.24, 0.36, 0.3, 1) 0.2s; }
+      .ql-toolbar:not(afsaf) .ql-expanded .ql-picker-options > span:nth-of-type(5) {
+        transition: 0.3s cubic-bezier(0.24, 0.36, 0.3, 1) 0.25s; }
+      .ql-toolbar:not(afsaf) .ql-expanded .ql-picker-options > span:nth-of-type(6) {
+        transition: 0.3s cubic-bezier(0.24, 0.36, 0.3, 1) 0.3s; }
+      .ql-toolbar:not(afsaf) .ql-expanded .ql-picker-options > span:nth-of-type(7) {
+        transition: 0.3s cubic-bezier(0.24, 0.36, 0.3, 1) 0.35s; }
+      .ql-toolbar:not(afsaf) .ql-expanded .ql-picker-options > span:nth-of-type(8) {
+        transition: 0.3s cubic-bezier(0.24, 0.36, 0.3, 1) 0.4s; }
+      .ql-toolbar:not(afsaf) .ql-expanded .ql-picker-options > span:nth-of-type(9) {
+        transition: 0.3s cubic-bezier(0.24, 0.36, 0.3, 1) 0.45s; }
+
+.ql-formats button.ql-bold i {
+  will-change: text-shadow; }
+
+.ql-formats button.ql-bold:focus i, .ql-formats button.ql-bold:hover i {
+  text-shadow: 0.025em 0 0 blue, -0.025em 0 0 blue, 0 0.025em 0 blue, 0 -0.025em 0 blue, -0.025em -0.025em 0 blue, -0.025em 0.025em 0 blue; }
+
+.ql-formats button.ql-italic i {
+  will-change: transform;
+  -ms-transform: skewX(-10deg);
+  transform: skewX(-10deg); }
+
+.ql-formats button.ql-italic:focus i, .ql-formats button.ql-italic:hover i {
+  -ms-transform: skewX(-25deg);
+  transform: skewX(-25deg); }
+
+.ql-formats button.ql-underline i {
+  will-change: transform;
+  font-size: 90%; }
+  .ql-formats button.ql-underline i:before {
+    content: '';
+    position: absolute;
+    bottom: -.1em;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(0, 0, 0, 0.2); }
+  .ql-formats button.ql-underline i:after {
+    content: '';
+    position: absolute;
+    bottom: -.1em;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: blue;
+    -ms-transform-origin: right;
+    transform-origin: right;
+    -ms-transform: scale(0, 1);
+    transform: scale(0, 1);
+    transform: scale3d(0, 1, 1);
+    transition: transform 0.4s cubic-bezier(0.24, 0.36, 0.3, 1); }
+
+.ql-formats button.ql-underline:focus i:after, .ql-formats button.ql-underline:hover i:after {
+  -ms-transform-origin: left;
+  transform-origin: left;
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1);
+  transform: scale3d(1, 1, 1); }
+
+.ql-formats button.ql-strike i {
+  position: relative; }
+  .ql-formats button.ql-strike i:after, .ql-formats button.ql-strike i:before {
+    content: '';
+    position: absolute;
+    top: calc(50% - 1px);
+    left: -.2em;
+    right: -.2em;
+    height: 2px; }
+  .ql-formats button.ql-strike i:before {
+    background: rgba(0, 0, 0, 0.2); }
+  .ql-formats button.ql-strike i:after {
+    background: blue;
+    box-shadow: 0 .1em 0 white;
+    -ms-transform-origin: right;
+    transform-origin: right;
+    -ms-transform: scale(0, 1);
+    transform: scale(0, 1);
+    transform: scale3d(0, 1, 1);
+    transition: transform 0.4s cubic-bezier(0.24, 0.36, 0.3, 1);
+    will-change: transform; }
+
+.ql-formats button.ql-strike:focus i:after, .ql-formats button.ql-strike:hover i:after {
+  -ms-transform-origin: left;
+  transform-origin: left;
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1);
+  transform: scale3d(1, 1, 1); }
+
+.ql-toolbar:not(afsaf) {
+  background: white;
+  opacity: 1 !important;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -ms-flex-align: center;
+  align-items: center;
+  font-family: monospace;
+  color: black;
+  font-family: 'Roboto';
+  border-bottom: 1px solid #ebebeb; }
+  .ql-toolbar:not(afsaf) .ql-formats {
+    display: -ms-flexbox;
+    display: flex; }
+    .ql-toolbar:not(afsaf) .ql-formats:not(:last-of-type):after {
+      content: '';
+      position: absolute;
+      top: .5rem;
+      bottom: .5rem;
+      width: 1px;
+      background: #ebebeb; }
+  .ql-toolbar:not(afsaf) button {
+    background: none;
+    margin-bottom: 0;
+    padding: 1rem .5rem;
+    transition: 0.4s cubic-bezier(0.24, 0.36, 0.3, 1); }
+    .ql-toolbar:not(afsaf) button:first-of-type {
+      margin-left: .5rem; }
+    .ql-toolbar:not(afsaf) button:last-of-type {
+      margin-right: .5rem; }
+    .ql-toolbar:not(afsaf) button i {
+      display: inline-block;
+      font-weight: 600;
+      font-style: inherit;
+      transition: 0.4s cubic-bezier(0.24, 0.36, 0.3, 1); }
+    .ql-toolbar:not(afsaf) button:hover, .ql-toolbar:not(afsaf) button:focus {
+      background: rgba(0, 0, 255, 0.05); }
+      .ql-toolbar:not(afsaf) button:hover i, .ql-toolbar:not(afsaf) button:focus i {
+        color: blue; }
 
 [data-tooltip] {
   position: relative;

@@ -1,0 +1,27 @@
+//
+// WYSIWYG Editor
+// --------------------------------------------------
+
+[data-editable="wysiwyg"] {
+    position: relative;
+    outline: none;
+
+    &:focus,
+    &:hover {
+
+        .ql-toolbar {
+            opacity: 1;
+            background: white;
+        }
+    }
+
+    .ql-toolbar {
+        opacity: 0;
+        transition: .4s $ease;
+        position: absolute;
+        bottom: 100%;
+        left: 1vw;
+        width: calc(100% - 2vw);
+        z-index: 1;
+    }
+}

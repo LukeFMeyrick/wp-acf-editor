@@ -1,0 +1,69 @@
+//
+// Base Toolbar
+// --------------------------------------------------
+
+.ql-toolbar:not(afsaf) {
+    background: white;
+    opacity: 1 !important;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-family: monospace;
+    color: black;
+    font-family: 'Roboto';
+    border-bottom: 1px solid $editLine;
+
+    .ql-formats {
+        display: flex;
+
+        &:not(:last-of-type) {
+            // border-right: 1px solid $editLine;
+
+            &:after {
+                content: '';
+                position: absolute;
+                top: .5rem;
+                bottom: .5rem;
+                width: 1px;
+                background: $editLine;
+            }
+        }
+
+    }
+
+
+    // ----------------
+    // General
+    // ----------------
+
+    button {
+        background: none;
+        margin-bottom: 0;
+        padding: 1rem .5rem;
+        transition: .4s $ease;
+
+        &:first-of-type {
+            margin-left: .5rem
+        }
+
+        &:last-of-type {
+            margin-right: .5rem
+        }
+
+        i {
+            display: inline-block;
+            font-weight: 600;
+            font-style: inherit;
+            transition: .4s $ease;
+        }
+
+        &:hover,
+        &:focus {
+            background: rgba($editColor,.05);
+
+            i {
+                color: $editColor;
+            }
+        }
+    }
+}

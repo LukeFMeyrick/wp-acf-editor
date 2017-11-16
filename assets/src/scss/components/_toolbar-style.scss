@@ -1,0 +1,140 @@
+// -----------------------------
+// B, I, U, S Styles
+// -----------------------------
+
+.ql-formats {
+
+    // Bold
+    // --------------
+    button.ql-bold {
+
+        i {
+            will-change: text-shadow;
+        }
+
+        &:focus,
+        &:hover {
+
+            i {
+                text-shadow:
+                    .025em 0 0 $editColor,
+                    -.025em 0 0 $editColor,
+                    0 .025em 0 $editColor,
+                    0 -.025em 0 $editColor,
+                    -.025em -.025em 0 $editColor,
+                    -.025em .025em 0 $editColor;
+            }
+        }
+    }
+
+    // Italic
+    // --------------
+    button.ql-italic {
+
+        i {
+            will-change: transform;
+            transform: skewX(-10deg);
+        }
+
+        &:focus,
+        &:hover {
+
+            i {
+                transform: skewX(-25deg);
+            }
+        }
+    }
+
+    // Underline
+    // --------------
+    button.ql-underline {
+
+        i {
+            will-change: transform;
+            font-size: 90%;
+
+            &:before {
+                content: '';
+                position: absolute;
+                bottom: -.1em;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: rgba(black,.2);
+            }
+
+            &:after {
+                content: '';
+                position: absolute;
+                bottom: -.1em;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: $editColor;
+                transform-origin: right;
+                transform: scale(0,1);
+                transform: scale3d(0,1,1);
+                transition: transform .4s $ease;
+            }
+        }
+
+        &:focus,
+        &:hover {
+
+            i {
+
+                &:after {
+                    transform-origin: left;
+                    transform: scale(1,1);
+                    transform: scale3d(1,1,1);
+                }
+            }
+        }
+    }
+
+    // Strike Through
+    // --------------
+    button.ql-strike {
+
+        i {
+            position: relative;
+
+            &:after,
+            &:before {
+                content: '';
+                position: absolute;
+                top: calc(50% - 1px);
+                left: -.2em;
+                right: -.2em;
+                height: 2px;
+            }
+
+            &:before {
+                background: rgba(black,.2);
+            }
+
+            &:after {
+                background: $editColor;
+                box-shadow: 0 .1em 0 white;
+                transform-origin: right;
+                transform: scale(0,1);
+                transform: scale3d(0,1,1);
+                transition: transform .4s $ease;
+                will-change: transform;
+            }
+        }
+
+        &:focus,
+        &:hover {
+
+            i {
+
+                &:after {
+                    transform-origin: left;
+                    transform: scale(1,1);
+                    transform: scale3d(1,1,1);
+                }
+            }
+        }
+    }
+}
